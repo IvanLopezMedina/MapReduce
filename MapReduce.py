@@ -1,3 +1,5 @@
+import re
+#Regular expressions
 class MapReduce:
 
     def __init__(self):
@@ -9,11 +11,15 @@ class MapReduce:
         for x in f:
             lines.append(x)
         #If you want to read each character one by one use print(f.read(1)) excluding the unwanted characters
+
+        f.close()
         return lines
 
     def split(self,lines):
         splitted = []
         for line in lines:
+            pattern = re.compile('([^\s\w]|_)+') #Creates and object of tpye regex nd assign it to the identifier pattern
+            line = pattern.sub('', line) #Replaces all the occurrences found by the Regex pattern in line with the replacement ''
             splitted.append(line.split())
 
         return splitted
