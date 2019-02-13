@@ -1,4 +1,5 @@
 import re
+import time
 #Regular expressions
 class MapReduce:
 
@@ -6,7 +7,7 @@ class MapReduce:
         self.test = 0
 
     def readFile(self):
-        f = open("file1.txt", "r")
+        f = open("bigfile.txt", "r")
         lines = []
         for x in f:
             lines.append(x)
@@ -17,10 +18,8 @@ class MapReduce:
 
     def split(self,lines):
         splitted = []
-        for line in lines:
-            pattern = re.compile('([^\s\w]|_)+') #Creates and object of tpye regex nd assign it to the identifier pattern
-            line = pattern.sub('', line) #Replaces all the occurrences found by the Regex pattern in line with the replacement ''
-            splitted.append(line.split())
+        clean = [(re.sub('([^\s\w]|_)+', '', line)) for line in lines] #Creates and object of tpye regex nd assign it to the identifier pattern
+        [splitted.append(line.split()) for line in clean]
 
         return splitted
 
@@ -41,5 +40,4 @@ if __name__ == '__main__':
     for line in splitlines:
         for word in line:
             print word
-
 
