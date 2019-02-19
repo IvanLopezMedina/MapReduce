@@ -7,19 +7,16 @@ class MapReduce:
         self.test = 0
 
     def readFile(self):
-        f = open("bigfile.txt", "r")
+        f = open("file1.txt", "r")
         lines = []
-        for x in f:
-            lines.append(x)
-        #If you want to read each character one by one use print(f.read(1)) excluding the unwanted characters
-
+        for line in f:
+            lines.append(re.sub('([^\s\w]|_)+', '', line))
         f.close()
         return lines
 
     def split(self,lines):
         splitted = []
-        clean = [(re.sub('([^\s\w]|_)+', '', line)) for line in lines] #Creates and object of tpye regex nd assign it to the identifier pattern
-        [splitted.append(line.split()) for line in clean]
+        [splitted.append(line.split()) for line in lines]
 
         return splitted
 
