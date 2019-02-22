@@ -1,16 +1,17 @@
 import re
 import time
+
 class MapReduce:
 
     def __init__(self):
         self.test = 0
 
     def readFile(fn):
-        regexp = '([^\s\w]|_)+'
+        regexp = '[*/.,:;.0-9]'
         bufsize = 80
         linesread = []
         splitted = []
-        with open("file1.txt", "rb") as infile:
+        with open("Sample.txt", "rb") as infile:
             while True:
                 lines = re.sub(regexp, '', infile.read(bufsize))
                 if not lines:
@@ -23,22 +24,23 @@ class MapReduce:
                         lines += char
                         #Launch thread
                 linesread.append(lines)
-                print linesread
+                #print linesread
 
         [splitted.append(line.split()) for line in linesread]
         infile.close()
         return splitted
 
     def map(self):
-	    print ""
+        print ""
 
     def shufle(self):
-	    print ""
+        print ""
 
     def reduce(self):
-	    print ""
+        print ""
 
 if __name__ == '__main__':
+
     start = time.time()
     my_MapReduce = MapReduce()
     lines = my_MapReduce.readFile()
@@ -46,8 +48,6 @@ if __name__ == '__main__':
     for line in lines:
         for word in line:
             print word
-
-
 
     end = time.time()
     print(end - start)
