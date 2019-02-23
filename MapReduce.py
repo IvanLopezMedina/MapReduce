@@ -1,6 +1,6 @@
 import re
 import time
-
+import threading
 class MapReduce:
 
     def __init__(self):
@@ -8,10 +8,12 @@ class MapReduce:
 
     def readFile(fn):
         regexp = '[*/.,:;.0-9]'
-        bufsize = 80
+        bufsize = 5000000
+        lock = threading.Lock()
         linesread = []
         splitted = []
-        with open("Sample.txt", "rb") as infile:
+        i = 0
+        with open("bigfile.txt", "rb") as infile:
             while True:
                 lines = re.sub(regexp, '', infile.read(bufsize))
                 if not lines:
@@ -23,12 +25,19 @@ class MapReduce:
                     else :
                         lines += char
                         #Launch thread
+                lock.acquire()
                 linesread.append(lines)
-                #print linesread
-
-        [splitted.append(line.split()) for line in linesread]
+                t = threading.Thread(target=my_MapReduce.split(linesread, splitted))
+                t.start()
+                #print "new thread"
+                linesread = []
+                lock.release()
+        #my_MapReduce.split(linesread, splitted)
         infile.close()
         return splitted
+
+    def split(self, linesread, splitted):
+        [splitted.append(line.split()) for line in linesread]
 
     def map(self):
         print ""
@@ -45,9 +54,9 @@ if __name__ == '__main__':
     my_MapReduce = MapReduce()
     lines = my_MapReduce.readFile()
 
-    for line in lines:
-        for word in line:
-            print word
+    #for line in lines:
+    #    for word in line:
+    #        print word
 
     end = time.time()
     print(end - start)
