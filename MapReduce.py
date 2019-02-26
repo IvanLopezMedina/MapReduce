@@ -11,7 +11,7 @@ class MapReduce:
         bufsize = 5000000
         linesread = []
         splitted = []
-        with open("bigfile.txt", "rb") as infile:
+        with open("file1.txt", "rb") as infile:
             while True:
                 lines = re.sub(regexp, '', infile.read(bufsize))
                 if not lines:
@@ -34,8 +34,15 @@ class MapReduce:
     def split(self, linesread, splitted):
         [splitted.append(line.split()) for line in linesread]
 
-    def map(self):
-        print ""
+    def map(self, lines):
+        diffwords = []
+        for line in lines:
+            for word in line:
+                if word not in diffwords:
+                    diffwords.append(word)
+        
+        for word in diffwords:
+            print word
 
     def shufle(self):
         print ""
@@ -49,9 +56,7 @@ if __name__ == '__main__':
     my_MapReduce = MapReduce()
     lines = my_MapReduce.readFile()
     
-    #for line in lines:
-    #    for word in line:
-    #        print word
+    my_MapReduce.map(lines)
 
     end = time.time()
     print(end - start)
