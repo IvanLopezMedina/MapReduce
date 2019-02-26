@@ -1,17 +1,18 @@
 import re
 import time
-import sys
+import sys as s
 class MapReduce:
 
     def __init__(self):
         self.test = 0
+        self.filesArgv = []
 
-    def readFile(self):
+    def readFile(self,file):
         regexp = '[*/.,:;.0-9]'
         bufsize = 5000000
         linesread = []
         splitted = []
-        with open("file1.txt", "rb") as infile:
+        with open(file, "rb") as infile:
             while True:
                 lines = re.sub(regexp, '', infile.read(bufsize))
                 if not lines:
@@ -28,6 +29,9 @@ class MapReduce:
                 linesread = []
         infile.close()
         return splitted
+
+    def readFiles(self):
+        self.filesArgv.append(str(s.argv[i]) for i in range(len(s.argv)))
 
     def split(self, linesread, splitted):
         [splitted.append(line.split()) for line in linesread]
@@ -49,21 +53,27 @@ class MapReduce:
                 dictionary[word[0]] = []
                 dictionary[word[0]].append(word)
 
-        print dictionary
-
+        #print dictionary
+        return dictionary
         
-    def reduce(self):
-        print ""
+    def reduce(self,dictionary):
+        print dictionary
 
 if __name__ == '__main__':
 
     start = time.time()
     my_MapReduce = MapReduce()
-    lines = my_MapReduce.readFile()
-    
-    mapwords = my_MapReduce.map(lines)
+    my_MapReduce.readFiles()
 
-    my_MapReduce.shufle(mapwords)
+    my_MapReduce.filesArgv = ["Sample.txt",
+                              "file1.txt"]  # fichero hardcodeados para probar que funciona la lectura de n ficheros
+    #Esto se borra y se pasa por arg en el comando
+
+    for file in my_MapReduce.filesArgv:
+        lines = my_MapReduce.readFile(file)
+        mapwords = my_MapReduce.map(lines)
+        dict = my_MapReduce.shufle(mapwords)
+        my_MapReduce.reduce(dict)
 
     end = time.time()
     print(end - start)
