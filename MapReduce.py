@@ -23,9 +23,7 @@ class MapReduce:
                     else :
                         lines += char
                         #Launch thread
-                linesread.append(lines)
-                #Launch threads
-                #t = threading.Thread(target=my_MapReduce.split(linesread, splitted)       
+                linesread.append(lines)      
                 my_MapReduce.split(linesread, splitted)
                 linesread = []
         infile.close()
@@ -35,18 +33,25 @@ class MapReduce:
         [splitted.append(line.split()) for line in linesread]
 
     def map(self, lines):
-        diffwords = []
+        mapwords = []
         for line in lines:
             for word in line:
-                if word not in diffwords:
-                    diffwords.append(word)
+                mapwords.append((word, 1))
+        return mapwords
+
+    def shufle(self, mapwords):
+        dictionary = {}
+
+        for word in mapwords:
+            if dictionary.has_key(word[0]):
+                dictionary[word[0]].append(word)
+            else:
+                dictionary[word[0]] = []
+                dictionary[word[0]].append(word)
+
+        print dictionary
+
         
-        for word in diffwords:
-            print word
-
-    def shufle(self):
-        print ""
-
     def reduce(self):
         print ""
 
@@ -56,7 +61,9 @@ if __name__ == '__main__':
     my_MapReduce = MapReduce()
     lines = my_MapReduce.readFile()
     
-    my_MapReduce.map(lines)
+    mapwords = my_MapReduce.map(lines)
+
+    my_MapReduce.shufle(mapwords)
 
     end = time.time()
     print(end - start)
