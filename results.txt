@@ -1,0 +1,1 @@
+Version BufferLine no threads: 100MB 2,5s. BufferSize 5MB
