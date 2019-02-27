@@ -6,10 +6,11 @@ class MapReduce:
     def __init__(self):
         self.test = 0
         self.filesArgv = []
-        self.finalList = {}
+        self.finalList = []
+        self.finalDictionary = {}
 
     def readFile(self,file):
-        regexp = '[*/.,:;.0-9]'
+        regexp = '[*?/.,:;.0-9]'
         bufsize = 5000000
         linesread = []
         splitted = []
@@ -59,17 +60,21 @@ class MapReduce:
         
     def reduce(self,dictionary):
 
-        for clave,valor in dictionary.items():
-            if clave not in self.finalList:
+        #print dictionary
 
-                self.finalList[clave] = len(valor)
-                #ESTO va MAL FIJO, NO LE HAGAS MUCHO CASO XD
+        for key, value in dictionary.items():
+            #print key, len(value)
 
-            else:
-                print ""
+            self.finalList.append((key,len(value))) #LO GUARDAMOS EN UNA LISTA
 
-        for clave, valor in self.finalList.items():
-            print clave, valor
+            self.finalDictionary[key] = value #LO GUARDAMOS EN UN DICCIONARIO
+
+        #for value in self.finalList: #PRINT DE LA LISTA
+        #   print value[0],":",value[1]
+
+        for key,value in self.finalDictionary.items(): #PRINT DEL DICCIONARIO. COMO DICCIONARIO SALE DESORDENADO
+            print key,len(value)
+
 
 
 
@@ -80,17 +85,22 @@ if __name__ == '__main__':
     my_MapReduce = MapReduce()
     my_MapReduce.readFiles()
 
-    my_MapReduce.filesArgv = ["file1.txt",
+    my_MapReduce.filesArgv = ["Sample.txt",
                               "file1.txt"]  # fichero hardcodeados para probar que funciona la lectura de n ficheros
     #Esto se borra y se pasa por arg en consola
 
     for file in my_MapReduce.filesArgv:
+        print "----------- "
+        print  file,":"
+        print "----------- "
+
         lines = my_MapReduce.readFile(file)
         mapwords = my_MapReduce.map(lines)
         dict = my_MapReduce.shufle(mapwords)
         my_MapReduce.reduce(dict)
+
         print "----------- "
-        print "  endfile   "
+        print "    end     "
         print "----------- "
 
     end = time.time()
