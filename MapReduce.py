@@ -38,6 +38,7 @@ class MapReduce:
 
     def split(self, linesread, splitted):
         [splitted.append(line.split()) for line in linesread]
+        #[splitted.append(list(line)) for line in linesread] #SEPARA PRO LETRAS
 
     def map(self, lines):
         mapwords = []
@@ -86,7 +87,7 @@ if __name__ == '__main__':
     my_MapReduce.readFiles()
 
     my_MapReduce.filesArgv = [
-                              "bigfile3.txt"]  # fichero hardcodeados para probar que funciona la lectura de n ficheros
+                              "bigfile.txt"]  # fichero hardcodeados para probar que funciona la lectura de n ficheros
     #Esto se borra y se pasa por arg en consola
 
     for file in my_MapReduce.filesArgv:
