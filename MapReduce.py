@@ -29,6 +29,7 @@ class MapReduce:
                 linesread.append(lines)      
                 my_MapReduce.split(linesread, splitted)
                 linesread = []
+
         infile.close()
         return splitted
 
@@ -43,6 +44,7 @@ class MapReduce:
         for line in lines:
             for word in line:
                 mapwords.append((word, 1))
+        
         return mapwords
 
     def shufle(self, mapwords):
@@ -59,9 +61,6 @@ class MapReduce:
         return dictionary
         
     def reduce(self,dictionary):
-
-        #print dictionary
-
         for key, value in dictionary.items():
             #print key, len(value)
 
@@ -75,6 +74,7 @@ class MapReduce:
         for key,value in self.finalDictionary.items(): #PRINT DEL DICCIONARIO. COMO DICCIONARIO SALE DESORDENADO
             print key,len(value)
 
+        self.finalDictionary = {}
 
 
 
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     my_MapReduce.readFiles()
 
     my_MapReduce.filesArgv = ["Sample.txt",
-                              "file1.txt"]  # fichero hardcodeados para probar que funciona la lectura de n ficheros
+                              "bigfile.txt"]  # fichero hardcodeados para probar que funciona la lectura de n ficheros
     #Esto se borra y se pasa por arg en consola
 
     for file in my_MapReduce.filesArgv:
