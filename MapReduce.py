@@ -85,8 +85,8 @@ if __name__ == '__main__':
     my_MapReduce = MapReduce()
     my_MapReduce.readFiles()
 
-    my_MapReduce.filesArgv = ["Sample.txt",
-                              "bigfile.txt"]  # fichero hardcodeados para probar que funciona la lectura de n ficheros
+    my_MapReduce.filesArgv = [
+                              "bigfile3.txt"]  # fichero hardcodeados para probar que funciona la lectura de n ficheros
     #Esto se borra y se pasa por arg en consola
 
     for file in my_MapReduce.filesArgv:
