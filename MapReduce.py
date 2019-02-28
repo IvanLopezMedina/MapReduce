@@ -9,29 +9,16 @@ class MapReduce:
         self.finalList = []
         self.finalDictionary = {}
 
-    def readFile(self,file):
-        regexp = '[*?/.,:;.0-9]'
-        bufsize = 5000000
-        linesread = []
+    def readFile(self, file):
+        f = open(file, "r")
+        lines = []
         splitted = []
-        with open(file, "rb") as infile:
-            while True:
-                lines = re.sub(regexp, '', infile.read(bufsize))
-                if not lines:
-                    break
-                while (lines[-1:] != "\n"):
-                    char = re.sub(regexp, '', infile.read(1))
-                    if not char:
-                        break
-                    else :
-                        lines += char
-                        #Launch thread
-                linesread.append(lines)      
-                my_MapReduce.split(linesread, splitted)
-                linesread = []
-
-        infile.close()
+        for line in f:
+            lines.append(re.sub('[*?/.,:;.0-9]', '', line))
+        f.close()
+        my_MapReduce.split(lines, splitted)
         return splitted
+
 
     def readFiles(self):
         self.filesArgv.append(str(s.argv[i]) for i in range(len(s.argv)))
