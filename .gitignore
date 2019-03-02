@@ -172,3 +172,5 @@ fabric.properties
 
 *.xml
 *.iml
+
+\.vscode/launch\.json
