@@ -4,14 +4,14 @@ import sys as s
 class MapReduce:
 
     def __init__(self):
-        self.test = 0
         self.filesArgv = []
-        self.finalList = []
         self.finalDictionary = {}
 
-
-    def readFile(self,file):
-        regexp = '[*?/.,:;.0-9]'
+    def readFile(self, file):
+        # Leeemos un solo fichero y eliminamos los caracteres raros con una Regular Expression
+        #
+        # Guardamos las lineas en una lista y llamamos al split para separar la linea en palabras
+        regexp = '[*?!"$%&()=^+#|@/.,:;.0-9]'
         bufsize = 5000000
         linesread = []
         splitted = []
@@ -24,10 +24,10 @@ class MapReduce:
                     char = re.sub(regexp, '', infile.read(1))
                     if not char:
                         break
-                    else :
+                    else:
                         lines += char
-                        #Launch thread
-                linesread.append(lines)      
+
+                linesread.append(lines)
                 my_MapReduce.split(linesread, splitted)
                 linesread = []
 
@@ -35,11 +35,13 @@ class MapReduce:
         return splitted
 
     def readFiles(self):
+        # Guardamos el nombre de todos los ficheros que nos pasan por argumento en una lista
         self.filesArgv.append(str(s.argv[i]) for i in range(len(s.argv)))
 
     def split(self, linesread, splitted):
+        # Separamos una linea en palabras y lo guardamos en una lista
         [splitted.append(line.split()) for line in linesread]
-        #[splitted.append(list(line)) for line in linesread] #SEPARA PRO LETRAS
+
 
     def map(self, lines):
         mapwords = []
@@ -51,7 +53,6 @@ class MapReduce:
 
     def shufle(self, mapwords):
         dictionary = {}
-
         for word in mapwords:
             if dictionary.has_key(word[0]):
                 dictionary[word[0]].append(word)
@@ -59,16 +60,17 @@ class MapReduce:
                 dictionary[word[0]] = []
                 dictionary[word[0]].append(word)
 
-        #print dictionary
         return dictionary
         
-    def reduce(self,dictionary):
+    def reduce(self, dictionary):
+        # Recorremos cada palabra del diccionario y contamos el numero de veces que esta repetida
+        # y las guardamos en un diccionario donde la clave es la palabra y el valor el numero de veces repetidas
         self.finalDictionary = {}
         for key, value in dictionary.items():
             cont = 0
             for key, num in value:
                 cont += num
-            self.finalDictionary[key] = cont #LO GUARDAMOS EN UN DICCIONARIO
+            self.finalDictionary[key] = cont
         
         for key, value in self.finalDictionary.items():
             print key, value
@@ -85,7 +87,7 @@ if __name__ == '__main__':
 
     for file in my_MapReduce.filesArgv:
         print "----------- "
-        print  file,":"
+        print file, ":"
         print "----------- "
 
         lines = my_MapReduce.readFile(file)
