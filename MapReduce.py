@@ -9,6 +9,7 @@ class MapReduce:
         self.finalList = []
         self.finalDictionary = {}
 
+
     def readFile(self,file):
         regexp = '[*?/.,:;.0-9]'
         bufsize = 5000000
@@ -62,23 +63,15 @@ class MapReduce:
         return dictionary
         
     def reduce(self,dictionary):
-        for key, value in dictionary.items():
-            #print key, len(value)
-
-            self.finalList.append((key,len(value))) #LO GUARDAMOS EN UNA LISTA
-
-            self.finalDictionary[key] = value #LO GUARDAMOS EN UN DICCIONARIO
-
-        #for value in self.finalList: #PRINT DE LA LISTA
-        #   print value[0],":",value[1]
-
-        for key,value in self.finalDictionary.items(): #PRINT DEL DICCIONARIO. COMO DICCIONARIO SALE DESORDENADO
-            print key,len(value)
-
         self.finalDictionary = {}
-
-
-
+        for key, value in dictionary.items():
+            cont = 0
+            for key, num in value:
+                cont += num
+            self.finalDictionary[key] = cont #LO GUARDAMOS EN UN DICCIONARIO
+        
+        for key, value in self.finalDictionary.items():
+            print key, value
 
 if __name__ == '__main__':
 
@@ -87,7 +80,7 @@ if __name__ == '__main__':
     my_MapReduce.readFiles()
 
     my_MapReduce.filesArgv = [
-                              "bigfile.txt"]  # fichero hardcodeados para probar que funciona la lectura de n ficheros
+                              "file1.txt"]  # fichero hardcodeados para probar que funciona la lectura de n ficheros
     #Esto se borra y se pasa por arg en consola
 
     for file in my_MapReduce.filesArgv:
