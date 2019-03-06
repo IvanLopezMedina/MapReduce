@@ -1,10 +1,10 @@
 import re
 import time
 import sys as s
+import threading as th
 class MapReduce:
 
     def __init__(self):
-        self.filesArgv = []
         self.finalDictionary = {}
 
     def readFile(self, file):
@@ -26,9 +26,11 @@ class MapReduce:
                         break
                     else:
                         lines += char
-
+                
                 linesread.append(lines)
-                my_MapReduce.split(linesread, splitted)
+                t = th.Thread(target=my_MapReduce.split(linesread, splitted))
+                t.start()
+                #my_MapReduce.split(linesread, splitted)
                 linesread = []
 
         infile.close()
