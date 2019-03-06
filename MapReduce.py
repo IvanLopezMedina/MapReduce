@@ -34,9 +34,6 @@ class MapReduce:
         infile.close()
         return splitted
 
-    def readFiles(self):
-        # Guardamos el nombre de todos los ficheros que nos pasan por argumento en una lista
-        self.filesArgv.append(str(s.argv[i]) for i in range(len(s.argv)))
 
     def split(self, linesread, splitted):
         # Separamos una linea en palabras y lo guardamos en una lista
@@ -78,13 +75,11 @@ if __name__ == '__main__':
 
     start = time.time()
     my_MapReduce = MapReduce()
-    my_MapReduce.readFiles()
+    
+    s.argv[1] = [ "file1.txt" ]
+    s.argv[2] = [ "bigfile.txt" ]
 
-    my_MapReduce.filesArgv = [ "file1.txt",
-                              "bigfile.txt"]  # fichero hardcodeados para probar que funciona la lectura de n ficheros
-    #Esto se borra y se pasa por arg en consola
-
-    for file in my_MapReduce.filesArgv:
+    for file in s.argv[1:]:
         print "----------- "
         print file, ":"
         print "----------- "
