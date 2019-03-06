@@ -75,11 +75,11 @@ if __name__ == '__main__':
 
     start = time.time()
     my_MapReduce = MapReduce()
-    
-    s.argv[1] = [ "file1.txt" ]
-    s.argv[2] = [ "bigfile.txt" ]
 
-    for file in s.argv[1:]:
+    argvHardcode = ["file1.txt", "bigfile.txt"]
+
+    for file in argvHardcode[0:]:
+    #for file in s.argv[1:]:
         print "----------- "
         print file, ":"
         print "----------- "
