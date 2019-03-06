@@ -41,13 +41,12 @@ class MapReduce:
     def split(self, linesread, splitted):
         # Separamos una linea en palabras y lo guardamos en una lista
         [splitted.append(line.split()) for line in linesread]
-
+        #[splitted.append(list(line)) for line in linesread] #SEPARA PRO LETRAS
 
     def map(self, lines):
         mapwords = []
         for line in lines:
-            for word in line:
-                mapwords.append((word, 1))
+            [mapwords.append((word, 1)) for word in line]
         
         return mapwords
 
@@ -73,7 +72,7 @@ class MapReduce:
             self.finalDictionary[key] = cont
         
         for key, value in self.finalDictionary.items():
-            print key, value
+            print key , " : " , value
 
 if __name__ == '__main__':
 
@@ -81,8 +80,8 @@ if __name__ == '__main__':
     my_MapReduce = MapReduce()
     my_MapReduce.readFiles()
 
-    my_MapReduce.filesArgv = [
-                              "file1.txt"]  # fichero hardcodeados para probar que funciona la lectura de n ficheros
+    my_MapReduce.filesArgv = [ "file1.txt",
+                              "bigfile.txt"]  # fichero hardcodeados para probar que funciona la lectura de n ficheros
     #Esto se borra y se pasa por arg en consola
 
     for file in my_MapReduce.filesArgv:
