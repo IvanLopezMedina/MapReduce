@@ -6,6 +6,7 @@ class MapReduce:
 
     def __init__(self):
         self.finalDictionary = {}
+        self.mapwords = []
 
     def readFile(self, file):
         # Leeemos un solo fichero y eliminamos los caracteres raros con una Regular Expression
@@ -13,8 +14,8 @@ class MapReduce:
         # Guardamos las lineas en una lista y llamamos al split para separar la linea en palabras
         regexp = '[*?!"$%&()=^+#|@/.,:;.0-9]'
         bufsize = 5000000
-        linesread = []
         splitted = []
+
         with open(file, "rb") as infile:
             while True:
                 lines = re.sub(regexp, '', infile.read(bufsize))
@@ -26,12 +27,12 @@ class MapReduce:
                         break
                     else:
                         lines += char
-                
+                linesread = []
                 linesread.append(lines)
                 t = th.Thread(target=my_MapReduce.split(linesread, splitted))
                 t.start()
                 #my_MapReduce.split(linesread, splitted)
-                linesread = []
+
 
         infile.close()
         return splitted
@@ -40,14 +41,13 @@ class MapReduce:
     def split(self, linesread, splitted):
         # Separamos una linea en palabras y lo guardamos en una lista
         [splitted.append(line.split()) for line in linesread]
+        my_MapReduce.map(splitted)
         #[splitted.append(list(line)) for line in linesread] #SEPARA PRO LETRAS
 
     def map(self, lines):
-        mapwords = []
         for line in lines:
-            [mapwords.append((word, 1)) for word in line]
+            [self.mapwords.append((word, 1)) for word in line]
         
-        return mapwords
 
     def shufle(self, mapwords):
         dictionary = {}
@@ -87,10 +87,10 @@ if __name__ == '__main__':
         print "----------- "
 
         lines = my_MapReduce.readFile(file)
-        mapwords = my_MapReduce.map(lines)
-        dict = my_MapReduce.shufle(mapwords)
+        #mapwords = my_MapReduce.map(lines)
+        dict = my_MapReduce.shufle(my_MapReduce.mapwords)
         my_MapReduce.reduce(dict)
-
+        my_MapReduce.mapwords = []
         print "----------- "
         print "    end     "
         print "----------- "
