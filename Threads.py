@@ -3,27 +3,47 @@ import time
 import codecs
 import re
 
-def aplicarMP(line):
-    regexp = '[*?!"$%&()=^+#|@/.,:;.0-9]'
-    mapwords = []
-
-    lines = re.sub(regexp, '', line)
-    splitted = lines.split()
-
-    [mapwords.append((word, 1)) for word in splitted]
-
+def split(line):
+    splitted = line.split()
+    mapwords = map(splitted)
     return mapwords
+
+def map(splitted):
+    mapwords = []
+    [mapwords.append((word, 1)) for word in splitted]
+    return mapwords
+
+def shufle(mapwords):
+    dictionary = {}
+    for wordlines in mapwords:
+        for word in wordlines:
+            if dictionary.has_key(word[0]):
+                dictionary[word[0]].append(word)
+            else:
+                dictionary[word[0]] = []
+                dictionary[word[0]].append(word)
+    return dictionary
+
+def reduce(dictionary):
+    finalDictionary = {}
+    for key, value in dictionary.items():
+        cont = 0
+        for key, num in value:
+            cont += num
+        finalDictionary[key] = cont
+
+    for key, value in finalDictionary.items():
+        print key, " : ", value
 
 
 if __name__ == "__main__":
     start = time.time()
     p = Pool(processes=4)
-
     file_name = 'bigfile.txt'
     lines = []
-
     bufsize = 500000
 
+    
     regexp = '[*?!"$%&()=^+#|@/.,:;.0-9]'
     with codecs.open(file_name,'r', encoding="utf8") as f:
         while True:
@@ -41,28 +61,15 @@ if __name__ == "__main__":
         #for line in f:
             #lines.append(line.strip())
 
-    dictionary = {}
-    finalDictionary = {}
-
-    mapwords = p.map(aplicarMP, lines)
-
-    for wordlines in mapwords:
-        for word in wordlines:
-            if dictionary.has_key(word[0]):
-                dictionary[word[0]].append(word)
-            else:
-                dictionary[word[0]] = []
-                dictionary[word[0]].append(word)
 
 
-    for key, value in dictionary.items():
-        cont = 0
-        for key, num in value:
-            cont += num
-        finalDictionary[key] = cont
 
-    for key, value in finalDictionary.items():
-        print key, " : ", value
+    mapwords = p.map(split, lines)
+
+    dictionary = shufle(mapwords)
+
+    reduce(dictionary)
+
 
 
     end = time.time()
