@@ -19,8 +19,8 @@ if __name__ == '__main__':
         # Amb la classe mapper afegim una parella clau valor { paraula: 1 }
         # als elements de la llista obtinguda del split
         map = mapper.Mapper(lines)
-        lines = ''
-        read = ''
+        del lines
+        del read
         gc.collect()
         mapwords = map.mapping()
 

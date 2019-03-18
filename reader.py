@@ -7,7 +7,7 @@ class ReaderSplitter:
         # Expressio regular per treure caracters no desitjats al text
         self.regexp = '[*?!"$%&()=^+#|@/.,:;.0-9]'
         # Tamany del buffer per llegir el fitxer en chunks de 5MB
-        self.bufsize = 5000000
+        self.BUFSIZE = 5000000
         self.file = file
     
     # Aquesta funcio llegeix el fitxer en trosos i crida al split
@@ -39,7 +39,7 @@ class ReaderSplitter:
         try:
             while True:
                 # Llegim el tamany del buffer 
-                data = re.sub(self.regexp, '', fileObj.read(self.bufsize))
+                data = re.sub(self.regexp, '', fileObj.read(self.BUFSIZE))
                 if not data:
                     break
                 # Continuem llegint fins trobar un salt de linea
