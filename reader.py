@@ -5,7 +5,7 @@ import threading as th
 class ReaderSplitter:
     def __init__(self, file):
         # Expressio regular per treure caracters no desitjats al text
-        self.regexp = '[*?!"$%&()=^+#|@/.,:;.0-9]'
+        self.RE = '[*?!"$%&()=^+#|@/.,:;.0-9]'
         # Tamany del buffer per llegir el fitxer en chunks de 5MB
         self.BUFSIZE = 5000000
         self.file = file
@@ -14,18 +14,17 @@ class ReaderSplitter:
     def readFile(self):
         linesread = []
         splitted = []
-
-        f = open(self.file)
-        for chunk in self.readInChunks(f):
+        file = open(self.file)
+        for chunk in self.readInChunks(file):
             linesread.append(chunk)
             # Fiquem les linies a splittar a una llista i ho deixem fent a un thread
             # Mentrestant el fitxer es pot seguir llegint  
-            t = th.Thread(target=self.split(linesread, splitted))
-            t.start()
+            threads = th.Thread(target=self.split(linesread, splitted))
+            threads.start()
             linesread = []
         # Esperem a tots el threads
-        t.join()
-        f.close()
+        threads.join()
+        file.close()
  
         return splitted
 
@@ -39,12 +38,12 @@ class ReaderSplitter:
         try:
             while True:
                 # Llegim el tamany del buffer 
-                data = re.sub(self.regexp, '', fileObj.read(self.BUFSIZE))
+                data = re.sub(self.RE, '', fileObj.read(self.BUFSIZE))
                 if not data:
                     break
                 # Continuem llegint fins trobar un salt de linea
-                while (data[-1:] != '\n'):
-                    char = re.sub(self.regexp, '', fileObj.read(1))
+                while data[-1:] != '\n':
+                    char = re.sub(self.RE, '', fileObj.read(1))
                     if not char:
                         break
                     else:
