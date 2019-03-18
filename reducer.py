@@ -7,14 +7,16 @@ class Reducer:
         self.finalDictionary = {}
 
     def reduce(self):
+        printDict = {}
         # Mirem per cada paraula del diccionari, les vegades que apareix la paraula sumant el seu valor que sempre es 1
         # les guardem a un diccionari { paraula: valortotal }
-        for word, value in self.dictShuffled.items():
-            cont = 0
-            for word, num in value:
-                cont += num
-            self.finalDictionary[word] = cont
-
+        for word, list in self.dictShuffled.items():
+            for key, value in list:
+                if key in printDict:
+                    printDict[key] += value
+                else:
+                    printDict[key] = value
         # Pintem el diccionari
-        for word, value in self.finalDictionary.items():
+        for word, value in printDict.items():
             print word , " : " , value
+            

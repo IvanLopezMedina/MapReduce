@@ -10,43 +10,47 @@ class ReaderSplitter:
         self.bufsize = 5000000
         self.file = file
     
-    # Aquesta funcio llegeix el fitxer i crida la funcio split, retorna una llista
+    # Aquesta funcio llegeix el fitxer en trosos i crida al split
     def readFile(self):
         linesread = []
         splitted = []
-        # Try catch per trobar possibles errors de memoria si el fitxer es massa gran
-        try:
-            with open(self.file, "rb") as infile:
-                while True:
-                    # Llegim 5MB, sino trobem final de linea, seguim llegint caracter a caracter
 
-                    lines = re.sub(self.regexp, '', infile.read(self.bufsize))
-                    if not lines:
-                        break
-                    while (lines[-1:] != "\n"):
-                        char = re.sub(self.regexp, '', infile.read(1))
-                        if not char:
-                            break
-                        else:
-                            lines += char
-                    # Fiquem les linies a splittar a una llista i ho deixem fent a un thread
-                    # Mentrestant el fitxer es pot seguir llegint
-                    linesread.append(lines)
-                    t = th.Thread(target=self.split(linesread, splitted))
-                    t.start()
-                
-                    linesread = []
-                    lines = ''
-
-        except MemoryError as err:
-            print("Error de memoria no tens suficient RAM, llegint part actual" + err)
-            infile.close()
-            return splitted
-
-        infile.close()
+        f = open(self.file)
+        for chunk in self.readInChunks(f):
+            linesread.append(chunk)
+            # Fiquem les linies a splittar a una llista i ho deixem fent a un thread
+            # Mentrestant el fitxer es pot seguir llegint  
+            t = th.Thread(target=self.split(linesread, splitted))
+            t.start()
+            linesread = []
+        # Esperem a tots el threads
+        t.join()
+        f.close()
+ 
         return splitted
 
     # La funcio split reb una llista de 5MB i la separa paraules
     def split(self, linesread, splitted):
         # Separem una linea en paraules i ho guardem en una llista
         [splitted.append(line.split()) for line in linesread]
+
+    def readInChunks(self, fileObj):
+        # Try catch per controlar la memoria
+        try:
+            while True:
+                # Llegim el tamany del buffer 
+                data = re.sub(self.regexp, '', fileObj.read(self.bufsize))
+                if not data:
+                    break
+                # Continuem llegint fins trobar un salt de linea
+                while (data[-1:] != '\n'):
+                    char = re.sub(self.regexp, '', fileObj.read(1))
+                    if not char:
+                        break
+                    else:
+                        data += char
+                # Retornem el chunk llegit amb yield que es mes eficient que return
+                yield data
+        except MemoryError as err:
+            print("Error de memoria no tens suficient RAM, llegint actual" + err)
+            yield data
